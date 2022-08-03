@@ -17,6 +17,7 @@ use App\Tanggaltemuan;
 use App\Temuansistem;
 use App\Temuanfile;
 use App\Filter;
+use App\Fileevidence;
 
 use App\Akses;
 
@@ -24,11 +25,15 @@ use App\Akses;
 class TemuanController extends Controller
 {
     public function index(request $request){
+        error_reporting(0);
         $menu='Temuan';
         $data=Temuan::orderBy('nomor','Desc')->get();
         
-        if(Auth::user()->role_id==2 || Auth::user()->role_id==4){
+        if(Auth::user()->role_id==2){
             return view('Temuan.index',compact('menu','data'));
+        }
+        if( Auth::user()->role_id==4 || Auth::user()->role_id==1){
+            return view('Temuan.index_view',compact('menu','data'));
         }
         if(Auth::user()->role_id==3 || Auth::user()->role_id==5){
             return view('Temuan.index_auditee',compact('menu','data'));
@@ -40,9 +45,15 @@ class TemuanController extends Controller
     public function get_data(request $request)
     {
         error_reporting(0);
-        if(Auth::user()->role_id==2){
+        if(Auth::user()->role_id==2 || Auth::user()->role_id==4 || Auth::user()->role_id==1){
                 $data=Temuan::query();
-                $data->whereIn('nomor',array_auditor());
+                if(Auth::user()->role_id==2){
+                    $data->whereIn('nomor',array_auditor());
+                }
+                if(Auth::user()->role_id==4){
+                    $data->whereIn('nomor',array_auditor());
+                }
+                
                 $data->whereYear('create',tahun());
                 if(filter_kode()=="all"){
 
@@ -50,7 +61,7 @@ class TemuanController extends Controller
                     $data->where('kode',filter_kode()); 
                 }
                 if(filter_status()=="all"){
-                    $data->where('status','!=',5);
+                    
                 }else{
                     $data->where('status',filter_status()); 
                 }
@@ -220,6 +231,33 @@ class TemuanController extends Controller
 
         ';
     }
+    public function tampil_file_evidence(request $request){
+        $temuan=Temuan::where('nomor_temuan',$request->nomor_temuan)->where('status_revisi',2)->count();
+        $get=Fileevidence::where('nomor_temuan',$request->nomor_temuan)->get();
+        echo'
+        <table class="table table-striped" width="100%">
+            <tr>
+                <th width="8%">File</th>
+                <th >Keterangan</th>';
+                if($temuan>0){
+                    echo'<th width="5%">Act</th>';
+                }echo'
+                
+            </tr>';
+
+            foreach($get as $no){
+                echo'
+                    <tr>
+                        <td><span class="btn btn-xs btn-success" onclick="lihat_file(`'.$no->file.'`)"><i class="fas fa-file-alt"></i></span></td>
+                        <td>'.$no->name.'</td>';
+                        if($temuan>0){
+                            echo'<td><span class="btn btn-danger btn-xs" onclick="hapus_file('.$no->id.')">Hapus</span></td>';
+                        }echo'
+                    </tr>
+
+                ';
+            }
+    }
     public function file(request $request){
         $get=Temuanfile::where('nomor_temuan',$request->nomor_temuan)->get();
         echo'
@@ -281,6 +319,10 @@ class TemuanController extends Controller
             $data=Temuan::where('nomor_temuan',$id)->first();
             return view('Temuan.detail_auditee',compact('menu','data','id'));
         }
+        if(Auth::user()->role_id==1 || Auth::user()->role_id==4){
+            $data=Temuan::where('nomor_temuan',$id)->first();
+            return view('Temuan.detail_view',compact('menu','data','id'));
+        }
         
     }
     
@@ -310,8 +352,28 @@ class TemuanController extends Controller
     }
     public function onprogres(request $request){
         if(Auth::user()->role_id==3 || Auth::user()->role_id==5){
+            $cek=Temuan::where('nomor_temuan',$request->nomor_temuan)->first();
+            if($cek->total_revisi>0){
+                $rev=$cek->total_revisi+1;
+            }else{
+                $rev=1;
+            }
             $data=Temuan::where('nomor_temuan',$request->nomor_temuan)->update([
-                'status'=>5
+                'status'=>5,
+                'status_revisi'=>1,
+                'total_revisi'=>$rev,
+                'tanggal_penyebab'=>date('Y-m-d'),
+            ]);
+            
+        }
+            
+    }
+    public function kirim_evidence(request $request){
+        if(Auth::user()->role_id==3 || Auth::user()->role_id==5){
+            $data=Temuan::where('nomor_temuan',$request->nomor_temuan)->update([
+                'status_revisi'=>3,
+                'status_progres'=>1,
+                'tanggal_evidence'=>date('Y-m-d'),
             ]);
             
         }
@@ -319,6 +381,10 @@ class TemuanController extends Controller
     }
     public function hapus_file(request $request){
         $first=Temuanfile::where('id',$request->id)->delete();
+            
+    }
+    public function hapus_file_evidence(request $request){
+        $first=Fileevidence::where('id',$request->id)->delete();
             
     }
     
@@ -397,6 +463,47 @@ class TemuanController extends Controller
             }
         }
     }
+    public function simpan_file_evidence(request $request){
+        error_reporting(0);
+        $rules = [
+            'file'=> 'required|mimes:pdf',
+            'name'=> 'required',
+        ];
+
+        $messages = [
+            'file.required'=> 'File harus PDF',
+            'name.required'=> 'Isi keterangan file',
+            
+        ];
+       
+        $validator = Validator::make($request->all(), $rules, $messages);
+        $val=$validator->Errors();
+
+
+        if ($validator->fails()) {
+            echo'<div style="padding:1%;color:#000;background:#e9e9de;text-transform:uppercase">';
+            foreach(parsing_validator($val) as $value){
+                foreach($value as $isi){
+                    echo'-&nbsp;'.$isi.'<br>';
+                }
+            }
+            echo'</div>';
+        }else{
+            $image = $request->file('file');
+            $imageFileName ='EV-'.$request->nomor_temuan.'-'.date('ymdhis').'.'. $image->getClientOriginalExtension();
+            $filePath =$imageFileName;
+            $file = \Storage::disk('public_uploads');
+            if($file->put($filePath, file_get_contents($image))){
+                $save               = New Fileevidence;
+                $save->nomor_temuan        = $request->nomor_temuan;
+                $save->name        = $request->name;
+                $save->file        = $filePath;
+                $save->save();
+
+                echo'@ok';   
+            }
+        }
+    }
 
     public function open(request $request){
         error_reporting(0);
@@ -442,6 +549,95 @@ class TemuanController extends Controller
                     echo'@ok'; 
                 }
             }
+                  
+            
+        }
+    }
+    public function review(request $request){
+        error_reporting(0);
+        $rules = [
+            'status'=> 'required',
+            'review'=> 'required',
+        ];
+
+        $messages = [
+            'status.required'=> 'Pilih Status verifikasi',
+            'review.required'=> 'Isi hasil review',
+            
+        ];
+       
+        $validator = Validator::make($request->all(), $rules, $messages);
+        $val=$validator->Errors();
+
+
+        if ($validator->fails()) {
+            echo'<div style="padding:1%;color:#000;background:#e9e9de;text-transform:uppercase">';
+            foreach(parsing_validator($val) as $value){
+                foreach($value as $isi){
+                    echo'-&nbsp;'.$isi.'<br>';
+                }
+            }
+            echo'</div>';
+        }else{
+            
+                $save=Temuan::where('nomor_temuan',$request->nomor_temuan)->update([
+                    'status_revisi'=>$request->status,
+                    'review'=>$request->review,
+                    'status_progres'=>0,
+                    
+                ]);
+                
+                echo'@ok'; 
+            
+                  
+            
+        }
+    }
+    public function evidence(request $request){
+        error_reporting(0);
+        $rules = [
+            'status'=> 'required',
+        ];
+
+        $messages = [
+            'status.required'=> 'Pilih Status verifikasi',
+            
+        ];
+       
+        $validator = Validator::make($request->all(), $rules, $messages);
+        $val=$validator->Errors();
+
+
+        if ($validator->fails()) {
+            echo'<div style="padding:1%;color:#000;background:#e9e9de;text-transform:uppercase">';
+            foreach(parsing_validator($val) as $value){
+                foreach($value as $isi){
+                    echo'-&nbsp;'.$isi.'<br>';
+                }
+            }
+            echo'</div>';
+        }else{
+            if($request->status==6){
+                $save=Temuan::where('nomor_temuan',$request->nomor_temuan)->update([
+                    'status'=>6,
+                    'status_revisi'=>4,
+                    'status_progres'=>2,
+                    'tanggal_close'=>date('Y-m-d'),
+                    
+                ]);
+                
+                echo'@ok'; 
+            }else{
+                $save=Temuan::where('nomor_temuan',$request->nomor_temuan)->update([
+                    'status_revisi'=>2,
+                    'status_progres'=>3,
+                    
+                ]);
+                
+                echo'@ok'; 
+            }
+                
+            
                   
             
         }

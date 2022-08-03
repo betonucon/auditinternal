@@ -151,7 +151,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-4" style="margin-bottom:0%;padding:1%">
-                            <div class="panel panel-inverse" data-sortable-id="form-stuff-3">
+                            <div class="panel panel-inverse">
                                 <div class="panel-heading ui-sortable-handle">
                                     <h4 class="panel-title">Penyebab</h4>
                                     <div class="panel-heading-btn">
@@ -167,7 +167,7 @@
                             </div>
                         </div>
                         <div class="col-md-4" style="margin-bottom:0%;padding:1%">
-                            <div class="panel panel-inverse" data-sortable-id="form-stuff-3">
+                            <div class="panel panel-inverse" >
                                 <div class="panel-heading ui-sortable-handle">
                                     <h4 class="panel-title">Perbaikan</h4>
                                     <div class="panel-heading-btn">
@@ -184,46 +184,108 @@
                             </div>
                         </div>
                         <div class="col-md-4" style="margin-bottom:0%;padding:1%">
-                            <div class="panel panel-inverse" data-sortable-id="form-stuff-3">
+                            <div class="panel panel-inverse" >
                                 <div class="panel-heading ui-sortable-handle">
-                                    <h4 class="panel-title">Penyebab</h4>
+                                    <h4 class="panel-title">Review</h4>
                                     <div class="panel-heading-btn">
-                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                                   
                                     </div>
                                 </div>
                                 <div class="panel-body p-t-10" style="border: solid 1px #8c8c9f;">
                                     <div class="row row-space-10">
                                         <div class="col-md-12">
-                                            <textarea class="form-control"  disabled rows="7">{{$data->tanggapan}}</textarea>
+                                            <textarea class="form-control"  disabled rows="7">{{$data->review}}</textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+                        @if($data->status_revisi==0 || $data->status_revisi==1 || $data->status_revisi==2)
+
+                        @else
+                            <div class="col-md-12">
+                                <table class="table table-invoice">
+                                    <thead>
+                                        <tr>
+                                            <th>TINDAK LANJUT</th>
+                                        </tr>
+                                    </thead>
+                                    
+                                </table>
+                                <div class="col-md-12 form-horizontal form-bordered" style="margin-bottom:2%">
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b>Input Penyebab</b></label>
+                                        <div class="col-lg-3">
+                                            <b>: {{$data->tanggal_penyebab}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b>Tanggal Audit</b></label>
+                                        <div class="col-lg-5">
+                                            <b>: {{$data->tanggal}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b>File Evidence</b></label>
+                                        <div class="col-lg-10">
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b></b></label>
+                                        <div class="col-lg-10">
+                                            <div id="tampil-file-evidence" ></div>
+                                        </div>
+                                    </div>
+                                    @if($data->status==6)
+                                        <div class="form-group row">
+                                            <label class="col-lg-2 col-form-label"><b>Tanggal Close</b></label>
+                                            <div class="col-lg-5">
+                                                <b>: {{$data->tanggal_close}}</b>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                                
+                                
+                                                  
+                            </div>
+                        @endif
                     </div>
                 @endif
-                <div class="row">
-                    <div class="col-md-12" style="margin-top:3%;margin-bottom:0%;background: #e2e2fd; text-align: center;padding:1%">
-                        @if($data->status==1)
-                        <div class="btn-group" >
-                            <span class="btn btn-sm btn-primary" onclick="verifikasi_publish()"><i class="fas fa-save"></i> Publish</span>
-                            
+                @if($data->status!=6)
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top:3%;margin-bottom:0%;background: #e2e2fd; text-align: center;padding:1%">
+                            @if($data->status==1)
+                            <div class="btn-group" >
+                                <span class="btn btn-sm btn-primary" onclick="verifikasi_publish()"><i class="fas fa-save"></i> Publish</span>
+                                
+                            </div>
+                            @endif
+                            @if($data->status==2)
+                                <i><b>Proses Persetujuan Auditee</b></i>
+                            @endif
+                            @if($data->status==3)
+                                <i><b>Proses penginputan penyebab dan Perbaikan</b></i>
+                            @endif
+                            @if($data->status==4)
+                                <i><b>Alasan</b></i><br>
+                            "{{$data->alasan_penolakan}}" 
+                            @endif
+                            @if($data->status==5)
+                                @if($data->status_revisi==1)
+                                    <a href="javascript:;" class="btn btn-sm btn-blue" onclick="tambah_review(`Review`)">Verifikasi</a>
+                                @endif
+                                @if($data->status_revisi==2)
+                                <i><b>Proses upload evidence</b></i>
+                                @endif
+                                @if($data->status_revisi==3)
+                                <span class="btn btn-sm btn-primary" onclick="verifikasi_evidence()">Verifikasi Evidence </span>
+                                @endif
+                            @endif
                         </div>
-                        @endif
-                        @if($data->status==2)
-                            <i><b>Proses Persetujuan Auditee</b></i>
-                        @endif
-                        @if($data->status==3)
-                            <i><b>Proses penginputan penyebab dan Perbaikan</b></i>
-                        @endif
-                        @if($data->status==4)
-                            <i><b>Alasan</b></i><br>
-                        "{{$data->alasan_penolakan}}" 
-                        @endif
                     </div>
-                </div>
-                
+                @endif   
                 
                 
             </div>
@@ -250,7 +312,78 @@
                 </div>
             </div>
         </div>
-    
+        <div class="modal fade" id="modal-evidence" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Verifikasi</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-yellow fade show"><b>Verifikasi Evidence!</b><br>Harap pastikan bawah hasil evidence sesuai ketidaksesuaian.</div>
+                        <div id="notifikasievidence"></div>
+                        <form class="form-horizontal form-bordered" id="mydataverifikasievidence"  method="post" enctype="multipart/form-data">
+                            @csrf
+
+                            <input type="hidden" name="nomor_temuan" value="{{$data->nomor_temuan}}">
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label"><b>Status Verifikasi</b></label>
+                                <div class="col-lg-9">
+                                    <select name="status" class="form-control">
+                                        <option value="">Pilih </option>
+                                        <option value="6">Close </option>
+                                        <option value="5">Tolak </option>
+                                    </select>
+                                </div>
+                               
+                            </div>
+                            
+                        </form>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Tutup</a>
+                        <a href="javascript:;" class="btn btn-blue" onclick="evidence()" >Verifikasi</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-review" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="labelnyaa"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="notifikasireview"></div>
+                        <form class="form-horizontal form-bordered" id="mydatareview"  method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="nomor_temuan" value="{{$data->nomor_temuan}}">
+                            <div class="form-group">
+                                <label class="col-lg-3 col-form-label"><b>Status Verifikasi</b></label>
+                                
+                                    <select name="status"  class="form-control">
+                                        <option value="">Pilih </option>
+                                        <option value="2">Setujui </option>
+                                        <option value="0">Tolak </option>
+                                    </select>
+                               
+                               
+                            </div>
+                            <div class="form-group">
+                                <label>Review</label>
+                                <textarea class="form-control" name="review" rows="6" placeholder="ketik disini.....">{{$data->review}}</textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Tutup</a>
+                        <a href="javascript:;" class="btn btn-blue" onclick="simpan_review()">Simpan</a>
+                    </div>
+                </div>
+            </div>
+        </div>  
         
         <div class="modal fade" id="modal-publish" aria-hidden="true" style="display: none;">
             <div class="modal-dialog">
@@ -292,6 +425,7 @@
 			format:"yyyy-mm-dd",
 			autoclose :true,
 		});
+        $('#tampil-file-evidence').load("{{url('Temuan/tampil_file_evidence')}}?nomor_temuan={{$data->nomor_temuan}}");
         $('#tampil_sistem').load("{{url('Temuan/sistem')}}?nomor_temuan={{$data->nomor_temuan}}");
          window.onload=function(){
             $('#pilihtanggal').on('changeDate', function(e) {
@@ -307,8 +441,13 @@
                 });
             });
         }
-        
-
+        function verifikasi_evidence(){
+            $('#modal-evidence').modal('show');
+        }
+        function tambah_review(name){
+            $('#labelnyaa').html(name);
+            $('#modal-review').modal('show');
+        }
 		function tambah_isian(name){
             $('#labelnyaa').html(name);
             $('#modal-isian').modal('show');
@@ -317,11 +456,65 @@
             $('#modal-publish').modal('show');
         }
 		function lihat_file(file){
-            $('#modal-file').modal('show');
+            $('#modal-isian').modal('show');
 
             $('#tampil-file').html('<embed src="{{url_plug()}}/file/'+file+'" width="100%" height="480"  type="application/pdf">');
                   
         }
+        function simpan_review(){
+            var form=document.getElementById('mydatareview');
+            
+                $.ajax({
+                    type: 'POST',
+                    url: "{{url('/Temuan/review')}}",
+                    data: new FormData(form),
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    beforeSend: function() {
+						document.getElementById("loadnya").style.width = "100%";
+					},
+                    success: function(msg){
+                        var bat=msg.split('@');
+                        if(bat[1]=='ok'){
+                            location.reload();
+                        }else{
+                            document.getElementById("loadnya").style.width = "0px";
+							$('#notifikasireview').html(msg);
+                        }
+                        
+                        
+                    }
+                });
+
+        } 
+        function evidence(){
+            var form=document.getElementById('mydataverifikasievidence');
+            
+                $.ajax({
+                    type: 'POST',
+                    url: "{{url('/Temuan/evidence')}}",
+                    data: new FormData(form),
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    beforeSend: function() {
+						document.getElementById("loadnya").style.width = "100%";
+					},
+                    success: function(msg){
+                        var bat=msg.split('@');
+                        if(bat[1]=='ok'){
+                            location.reload();
+                        }else{
+                            document.getElementById("loadnya").style.width = "0px";
+							$('#notifikasievidence').html(msg);
+                        }
+                        
+                        
+                    }
+                });
+
+        } 
 		function publish(nomor_temuan){
             $.ajax({
                 url: "{{url('Temuan/publish')}}",

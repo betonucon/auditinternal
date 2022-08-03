@@ -34,7 +34,7 @@
 						</a>
 					</li>
 					
-					
+					@if(Auth::user()->role_id==1)
 					<li class="has-sub">
 						<a href="javascript:;">
 							<b class="caret"></b>
@@ -61,10 +61,37 @@
 							<span>Temuan </span> 
 						</a>
 					</li>
+					@endif
 					
+					@if(Auth::user()->role_id==2 || Auth::user()->role_id==4)
+					<li>
+						<a href="{{url('/Temuan')}}">
+							<i class="fas fa-newspaper"></i>
+							<span>Temuan </span> 
+						</a>
+					</li>
 					
-					
-					
+					@endif
+					@if(Auth::user()->role_id==3 || Auth::user()->role_id==5 )
+					<li>
+						<a href="{{url('/Temuan')}}">
+							<i class="fas fa-newspaper"></i>
+							<span>Temuan </span> 
+						</a>
+					</li>
+					@endif
+					<li>
+						<a href="{{url('/Help')}}">
+							<i class="fas fa-info-circle"></i>
+							<span>Help </span> 
+						</a>
+					</li>
+					<li>
+						<a href="{{url('/Book')}}">
+							<i class="fas fa-book"></i>
+							<span>Manual Book </span> 
+						</a>
+					</li>
 					<li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
 					<!-- end sidebar minify button -->
 				</ul>

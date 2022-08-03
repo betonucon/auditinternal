@@ -102,11 +102,11 @@
                 <!-- end panel-heading -->
                 <!-- begin panel-body -->
                 <div class="panel-body">
-                    <div class="row">
+                    <div class="row" >
+                        
                         <div class="col-md-4">
                             <div style="width:100%;background:#e3e3e9;padding:5px;margin-bottom:1%;margin-top:1%">
                                 <div class="btn-group btn-group-justified">
-                                    <a class="btn btn-success btn-sm text-white" onclick="tambah(0)"><i class="fas fa-plus"></i> Buat Baru</a>
                                     <a class="btn btn-success btn-sm text-white"  data-toggle="modal" data-target="#modal-cari-temuan" ><i class="fas fa-filter"></i> Filter</a>
                                     <a class="btn btn-success btn-sm  text-white" onclick="location.assign(`{{url('Temuan/export_excel')}}`)"><i class="fas fa-file-excel"></i> Export To Excel</a>
                                 </div>

@@ -75,17 +75,23 @@ Route::group(['middleware'    => 'auth'],function(){
     Route::get('/Temuan/export_excel', 'TemuanController@export_excel');
     Route::get('/Temuan/modal_Temuanor', 'TemuanController@modal_Temuanor');
     Route::get('/Temuan/sistem', 'TemuanController@sistem');
+    Route::get('/Temuan/tampil_file_evidence', 'TemuanController@tampil_file_evidence');
     Route::post('/Temuan/filter', 'TemuanController@filternya');
     Route::get('/Temuan/file', 'TemuanController@file');
+    Route::get('/Temuan/kirim_evidence', 'TemuanController@kirim_evidence');
     Route::post('/Temuan', 'TemuanController@simpan');  
     Route::post('/Temuan/create', 'TemuanController@create');  
     Route::post('/Temuan/open', 'TemuanController@open');  
+    Route::post('/Temuan/evidence', 'TemuanController@evidence');  
     Route::post('/Temuan/penyebab', 'TemuanController@penyebab');  
+    Route::post('/Temuan/review', 'TemuanController@review');  
     Route::post('/Temuan/perbaikan', 'TemuanController@perbaikan');  
     Route::post('/Temuan/simpan_sistem', 'TemuanController@simpan_sistem');  
     Route::post('/Temuan/simpan_file', 'TemuanController@simpan_file');  
+    Route::post('/Temuan/simpan_file_evidence', 'TemuanController@simpan_file_evidence');  
     Route::get('/Temuan/hapus', 'TemuanController@hapus');  
     Route::get('/Temuan/hapus_file', 'TemuanController@hapus_file');  
+    Route::get('/Temuan/hapus_file_evidence', 'TemuanController@hapus_file_evidence');  
     Route::get('/Temuan/form', 'TemuanController@form');
     Route::get('/Temuan/publish', 'TemuanController@publish');
     Route::get('/Temuan/onprogres', 'TemuanController@onprogres');
@@ -98,6 +104,18 @@ Route::group(['middleware'    => 'auth'],function(){
     Route::get('/Periode/form', 'PeriodeController@form');
 });
 Route::group(['middleware'    => 'auth'],function(){
+    Route::get('/Pengaturan', 'PengaturanController@index');
+    Route::get('/Help', 'PengaturanController@help');
+    Route::get('/Book', 'PengaturanController@book');
+    Route::get('/Pengaturan/get_data', 'PengaturanController@get_data');
+    Route::get('/Pengaturan/tampil_help', 'PengaturanController@tampil_help');
+    Route::get('/Pengaturan/form_help', 'PengaturanController@form_help');
+    Route::get('/Pengaturan/hapus_help', 'PengaturanController@hapus_help');
+    Route::post('/Pengaturan/help', 'PengaturanController@simpan_help');  
+    Route::get('/Pengaturan/hapus', 'PengaturanController@hapus');  
+    Route::get('/Pengaturan/form', 'PengaturanController@form');
+});
+Route::group(['middleware'    => 'auth'],function(){
     Route::get('/Chat', 'ChatController@index');
     Route::post('/Chat', 'ChatController@simpan');  
 });
@@ -106,6 +124,7 @@ Route::group(['middleware'    => 'auth'],function(){
     Route::get('/', 'HomeController@index')->name('home');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/tampil_dashboard', 'HomeController@tampil_dashboard');
+    Route::get('/tampil_dashboard_sistem', 'HomeController@tampil_dashboard_sistem');
     Route::get('/tampil_grafik', 'HomeController@tampil_grafik');
     Route::get('/cari_tahun', 'HomeController@cari_tahun');
     Route::get('/tampil_loading', 'HomeController@tampil_loading');

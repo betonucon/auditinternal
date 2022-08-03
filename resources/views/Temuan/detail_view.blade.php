@@ -147,7 +147,7 @@
                     </div>
                     
                 </div>
-                @if($data->status>2 && $data->status!=4)
+                @if($data->status>=5)
                     <hr>
                     <div class="row">
                         <div class="col-md-4" style="margin-bottom:0%;padding:1%">
@@ -155,60 +155,104 @@
                                 <div class="panel-heading ui-sortable-handle">
                                     <h4 class="panel-title">Penyebab</h4>
                                     <div class="panel-heading-btn">
-                                    @if($data->status==3)
-                                        <a href="javascript:;" onclick="tambah_penyebab(`Penyebab`)" class="btn btn-xs btn-danger"><i class="fas fa-pencil-alt"></i> Isi Penyebab</a>
-                                    @endif
                                     </div>
                                 </div>
                                 <div class="panel-body p-t-10" style="border: solid 1px #8c8c9f;">
                                     <div class="row row-space-10">
                                         <div class="col-md-12">
-                                            <textarea class="form-control" disabled rows="7">{{$data->penyebab}}</textarea>
+                                        <textarea class="form-control" disabled rows="7">{{$data->penyebab}}</textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4" style="margin-bottom:0%;padding:1%">
-                            <div class="panel panel-inverse">
+                            <div class="panel panel-inverse" >
                                 <div class="panel-heading ui-sortable-handle">
                                     <h4 class="panel-title">Perbaikan</h4>
                                     <div class="panel-heading-btn">
-                                    @if($data->status==3)
-                                        <a href="javascript:;" class="btn btn-xs btn-danger" onclick="tambah_perbaikan(`Perbaikan`)"><i class="fas fa-pencil-alt"></i> Isi Perbaikan</a>
-                                    @endif
+                                        
                                     </div>
                                 </div>
                                 <div class="panel-body p-t-10" style="border: solid 1px #8c8c9f;">
                                     <div class="row row-space-10">
                                         <div class="col-md-12">
-                                        <textarea class="form-control" disabled rows="7">{{$data->perbaikan}}</textarea>
+                                            <textarea class="form-control" disabled rows="7">{{$data->perbaikan}}</textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4" style="margin-bottom:0%;padding:1%">
-                            <div class="panel panel-inverse">
+                            <div class="panel panel-inverse" >
                                 <div class="panel-heading ui-sortable-handle">
-                                    <h4 class="panel-title">Penyebab</h4>
+                                    <h4 class="panel-title">Review</h4>
                                     <div class="panel-heading-btn">
-                                        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+                                   
                                     </div>
                                 </div>
                                 <div class="panel-body p-t-10" style="border: solid 1px #8c8c9f;">
                                     <div class="row row-space-10">
                                         <div class="col-md-12">
-                                            <textarea class="form-control" disabled rows="7">{{$data->tanggapan}}</textarea>
+                                            <textarea class="form-control"  disabled rows="7">{{$data->review}}</textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+                        @if($data->status_revisi==0 || $data->status_revisi==1 || $data->status_revisi==2)
+
+                        @else
+                            <div class="col-md-12">
+                                <table class="table table-invoice">
+                                    <thead>
+                                        <tr>
+                                            <th>TINDAK LANJUT</th>
+                                        </tr>
+                                    </thead>
+                                    
+                                </table>
+                                <div class="col-md-12 form-horizontal form-bordered" style="margin-bottom:2%">
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b>Input Penyebab</b></label>
+                                        <div class="col-lg-3">
+                                            <b>: {{$data->tanggal_penyebab}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b>Tanggal Audit</b></label>
+                                        <div class="col-lg-5">
+                                            <b>: {{$data->tanggal}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b>File Evidence</b></label>
+                                        <div class="col-lg-10">
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b></b></label>
+                                        <div class="col-lg-10">
+                                            <div id="tampil-file-evidence" ></div>
+                                        </div>
+                                    </div>
+                                    @if($data->status==6)
+                                        <div class="form-group row">
+                                            <label class="col-lg-2 col-form-label"><b>Tanggal Close</b></label>
+                                            <div class="col-lg-5">
+                                                <b>: {{$data->tanggal_close}}</b>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                                
+                                
+                                                  
+                            </div>
+                        @endif
                     </div>
                 @endif
-                
                 
             </div>
         </div>
@@ -217,107 +261,24 @@
     </div>
     <div class="row">
         
-        <div class="modal fade" id="modal-penyebab" aria-hidden="true" style="display: none;">
-            <div class="modal-dialog">
+        <div class="modal fade" id="modal-isian" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="labelnyaa"></h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
-                        <div id="notifikasipenyebab"></div>
-                        <form class="form-horizontal form-bordered" id="mydatapenyebab"  method="post" enctype="multipart/form-data">
-                            @csrf
-                            <input type="text" name="nomor_temuan" value="{{$data->nomor_temuan}}">
-                            <div class="form-group">
-                                <label>Penyebab</label>
-                                <textarea class="form-control" name="penyebab" rows="6" placeholder="ketik disini.....">{{$data->penyebab}}</textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Tutup</a>
-                        <a href="javascript:;" class="btn btn-blue" onclick="simpan_penyebab()">Simpan</a>
-                    </div>
-                </div>
-            </div>
-        </div>  
-        <div class="modal fade" id="modal-perbaikan" aria-hidden="true" style="display: none;">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="labelnyaa2"></h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="notifikasiperbaikan"></div>
-                        <form class="form-horizontal form-bordered" id="mydataperbaikan"  method="post" enctype="multipart/form-data">
-                            @csrf
-                            <input type="text" name="nomor_temuan" value="{{$data->nomor_temuan}}">
-                            <div class="form-group">
-                                <label>Perbaikan</label>
-                                <textarea class="form-control" name="perbaikan" rows="6" placeholder="ketik disini.....">{{$data->perbaikan}}</textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Tutup</a>
-                        <a href="javascript:;" class="btn btn-blue" onclick="simpan_perbaikan()">Simpan</a>
-                    </div>
-                </div>
-            </div>
-        </div>  
-    
-        
-        <div class="modal fade" id="modal-publish" aria-hidden="true" style="display: none;">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Verifikasi Temuan</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="notifikasiverifikasi"></div>
-                        <form class="form-horizontal form-bordered" id="mydataverifikasi"  method="post" enctype="multipart/form-data">
-                            @csrf
-                            <input type="hidden" name="nomor_temuan" value="{{$data->nomor_temuan}}">
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-form-label"><b>Status Verifikasi</b></label>
-                                <div class="col-lg-5">
-                                    <select name="status" onchange="pilih_status(this.value)" class="form-control">
-                                        <option value="">Pilih </option>
-                                        <option value="3">Setujui </option>
-                                        <option value="4">Tolak </option>
-                                    </select>
-                                </div>
-                               
-                            </div>
-                            <div class="form-group row" id="setujui">
-                                <label class="col-lg-3 col-form-label"><b>Alasan Menolak</b></label>
-                                <div class="col-lg-9">
-                                    <textarea disabled rows="3" class="form-control"></textarea>
-                                </div>
-                               
-                            </div>
-                            <div class="form-group row" id="tolak">
-                                <label class="col-lg-3 col-form-label"><b>Alasan Menolak</b></label>
-                                <div class="col-lg-9">
-                                    <textarea name="alasan_penolakan" placeholder="Ketik disini...." rows="3" class="form-control"></textarea>
-                                </div>
-                               
-                            </div>
-                        </form>
+                        <div id="tampil-file"></div>
                         
                     </div>
                     <div class="modal-footer">
                         <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Tutup</a>
-                        <a href="javascript:;" class="btn btn-blue" onclick="publish()" >Verifikasi</a>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="modal fade" id="modal-onprogres" aria-hidden="true" style="display: none;">
+        <div class="modal fade" id="modal-evidence" aria-hidden="true" style="display: none;">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -325,11 +286,84 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
+                        <div class="alert alert-yellow fade show"><b>Verifikasi Evidence!</b><br>Harap pastikan bawah hasil evidence sesuai ketidaksesuaian.</div>
+                        <div id="notifikasievidence"></div>
+                        <form class="form-horizontal form-bordered" id="mydataverifikasievidence"  method="post" enctype="multipart/form-data">
+                            @csrf
+
+                            <input type="hidden" name="nomor_temuan" value="{{$data->nomor_temuan}}">
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label"><b>Status Verifikasi</b></label>
+                                <div class="col-lg-9">
+                                    <select name="status" class="form-control">
+                                        <option value="">Pilih </option>
+                                        <option value="6">Close </option>
+                                        <option value="5">Tolak </option>
+                                    </select>
+                                </div>
+                               
+                            </div>
+                            
+                        </form>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Tutup</a>
+                        <a href="javascript:;" class="btn btn-blue" onclick="evidence()" >Verifikasi</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-review" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="labelnyaa"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="notifikasireview"></div>
+                        <form class="form-horizontal form-bordered" id="mydatareview"  method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="nomor_temuan" value="{{$data->nomor_temuan}}">
+                            <div class="form-group">
+                                <label class="col-lg-3 col-form-label"><b>Status Verifikasi</b></label>
+                                
+                                    <select name="status"  class="form-control">
+                                        <option value="">Pilih </option>
+                                        <option value="2">Setujui </option>
+                                        <option value="0">Tolak </option>
+                                    </select>
+                               
+                               
+                            </div>
+                            <div class="form-group">
+                                <label>Review</label>
+                                <textarea class="form-control" name="review" rows="6" placeholder="ketik disini.....">{{$data->review}}</textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Tutup</a>
+                        <a href="javascript:;" class="btn btn-blue" onclick="simpan_review()">Simpan</a>
+                    </div>
+                </div>
+            </div>
+        </div>  
+        
+        <div class="modal fade" id="modal-publish" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Verifikasi Publish</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
                         <div class="note note-warning note-with-right-icon m-b-15">
                             <div class="note-content text-right">
                                 <h4><b>Verifikasi!</b></h4>
                                 <p>
-                                    Nomor Temuan #{{$data->nomor_temuan}} selesai dilakukan pengisian penyebab, yakin akan dikirim keauditor?
+                                    Nomor Temuan #{{$data->nomor_temuan}} yakin untuk dipublish?
                                 </p>
                             </div>
                             <div class="note-icon"><i class="fa fa-lightbulb"></i></div>
@@ -338,7 +372,7 @@
                     </div>
                     <div class="modal-footer">
                         <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Tutup</a>
-                        <a href="javascript:;" class="btn btn-blue" onclick="onprogres({{$data->nomor_temuan}})" >Verifikasi</a>
+                        <a href="javascript:;" class="btn btn-blue" onclick="publish({{$data->nomor_temuan}})" >Verifikasi</a>
                     </div>
                 </div>
             </div>
@@ -357,29 +391,7 @@
 			format:"yyyy-mm-dd",
 			autoclose :true,
 		});
-
-        $('#setujui').show();
-        $('#tolak').hide();
-
-        function tambah_penyebab(name){
-            $('#labelnyaa').html(name);
-            $('#modal-penyebab').modal('show');
-        }
-        function tambah_perbaikan(name){
-            $('#labelnyaa2').html(name);
-            $('#modal-perbaikan').modal('show');
-        }
-        function pilih_status(id){
-            if(id==4){
-                $('#setujui').hide();
-                $('#tolak').show();
-            }else{
-                $('#setujui').show();
-                $('#tolak').hide();
-            }
-        }
-
-
+        $('#tampil-file-evidence').load("{{url('Temuan/tampil_file_evidence')}}?nomor_temuan={{$data->nomor_temuan}}");
         $('#tampil_sistem').load("{{url('Temuan/sistem')}}?nomor_temuan={{$data->nomor_temuan}}");
          window.onload=function(){
             $('#pilihtanggal').on('changeDate', function(e) {
@@ -395,10 +407,83 @@
                 });
             });
         }
-        
-        function onprogres(nomor_temuan){
+        function verifikasi_evidence(){
+            $('#modal-evidence').modal('show');
+        }
+        function tambah_review(name){
+            $('#labelnyaa').html(name);
+            $('#modal-review').modal('show');
+        }
+		function tambah_isian(name){
+            $('#labelnyaa').html(name);
+            $('#modal-isian').modal('show');
+        }
+		function verifikasi_publish(){
+            $('#modal-publish').modal('show');
+        }
+		function lihat_file(file){
+            $('#modal-isian').modal('show');
+
+            $('#tampil-file').html('<embed src="{{url_plug()}}/file/'+file+'" width="100%" height="480"  type="application/pdf">');
+                  
+        }
+        function simpan_review(){
+            var form=document.getElementById('mydatareview');
+            
+                $.ajax({
+                    type: 'POST',
+                    url: "{{url('/Temuan/review')}}",
+                    data: new FormData(form),
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    beforeSend: function() {
+						document.getElementById("loadnya").style.width = "100%";
+					},
+                    success: function(msg){
+                        var bat=msg.split('@');
+                        if(bat[1]=='ok'){
+                            location.reload();
+                        }else{
+                            document.getElementById("loadnya").style.width = "0px";
+							$('#notifikasireview').html(msg);
+                        }
+                        
+                        
+                    }
+                });
+
+        } 
+        function evidence(){
+            var form=document.getElementById('mydataverifikasievidence');
+            
+                $.ajax({
+                    type: 'POST',
+                    url: "{{url('/Temuan/evidence')}}",
+                    data: new FormData(form),
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    beforeSend: function() {
+						document.getElementById("loadnya").style.width = "100%";
+					},
+                    success: function(msg){
+                        var bat=msg.split('@');
+                        if(bat[1]=='ok'){
+                            location.reload();
+                        }else{
+                            document.getElementById("loadnya").style.width = "0px";
+							$('#notifikasievidence').html(msg);
+                        }
+                        
+                        
+                    }
+                });
+
+        } 
+		function publish(nomor_temuan){
             $.ajax({
-                url: "{{url('Temuan/onprogres')}}",
+                url: "{{url('Temuan/publish')}}",
                 type: 'GET',
                 data: "nomor_temuan="+nomor_temuan,
                 beforeSend: function() {
@@ -410,19 +495,6 @@
             });
             
         }
-		function verifikasi_publish(){
-            $('#modal-publish').modal('show');
-        }
-		function verifikasi_onprogres(){
-            $('#modal-onprogres').modal('show');
-        }
-		function lihat_file(file){
-            $('#modal-file').modal('show');
-
-            $('#tampil-file').html('<embed src="{{url_plug()}}/file/'+file+'" width="100%" height="480"  type="application/pdf">');
-                  
-        }
-		
 		function hapus_file(id){
             $.ajax({
                 url: "{{url('Temuan/hapus_file')}}",
@@ -438,12 +510,12 @@
             });
             
         }
-		function publish(){
-            var form=document.getElementById('mydataverifikasi');
+		function simpan_data(){
+            var form=document.getElementById('mydata');
             
                 $.ajax({
                     type: 'POST',
-                    url: "{{url('/Temuan/open')}}",
+                    url: "{{url('/Temuan')}}",
                     data: new FormData(form),
                     contentType: false,
                     cache: false,
@@ -458,7 +530,8 @@
                                
                         }else{
                             document.getElementById("loadnya").style.width = "0px";
-							$('#notifikasiverifikasi').html(msg);
+							$('#modal-alert').modal('show');
+							$('#notifikasi').html(msg);
                         }
                         
                         
@@ -466,12 +539,12 @@
                 });
 
         } 
-		function simpan_penyebab(){
-            var form=document.getElementById('mydatapenyebab');
+		function simpan_sistem(){
+            var form=document.getElementById('mydatasistem');
             
                 $.ajax({
                     type: 'POST',
-                    url: "{{url('/Temuan/penyebab')}}",
+                    url: "{{url('/Temuan/simpan_sistem')}}",
                     data: new FormData(form),
                     contentType: false,
                     cache: false,
@@ -482,37 +555,14 @@
                     success: function(msg){
                         var bat=msg.split('@');
                         if(bat[1]=='ok'){
-                            location.reload();
+                            $('#tampil_sistem').load("{{url('Temuan/sistem')}}?nomor_temuan={{$data->nomor_temuan}}");
+                            document.getElementById("loadnya").style.width = "0px";
+                            $('#modal-form').modal('hide');   
+                              
+                               
                         }else{
                             document.getElementById("loadnya").style.width = "0px";
-							$('#notifikasipenyebab').html(msg);
-                        }
-                        
-                        
-                    }
-                });
-
-        } 
-        function simpan_perbaikan(){
-            var form=document.getElementById('mydataperbaikan');
-            
-                $.ajax({
-                    type: 'POST',
-                    url: "{{url('/Temuan/perbaikan')}}",
-                    data: new FormData(form),
-                    contentType: false,
-                    cache: false,
-                    processData:false,
-                    beforeSend: function() {
-						document.getElementById("loadnya").style.width = "100%";
-					},
-                    success: function(msg){
-                        var bat=msg.split('@');
-                        if(bat[1]=='ok'){
-                            location.reload();
-                        }else{
-                            document.getElementById("loadnya").style.width = "0px";
-							$('#notifikasiperbaikan').html(msg);
+							$('#notifikasierror').html(msg);
                         }
                         
                         

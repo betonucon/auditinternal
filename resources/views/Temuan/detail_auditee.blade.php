@@ -155,8 +155,12 @@
                                 <div class="panel-heading ui-sortable-handle">
                                     <h4 class="panel-title">Penyebab</h4>
                                     <div class="panel-heading-btn">
-                                    @if($data->status==3)
+                                    @if($data->status==3 )
                                         <a href="javascript:;" onclick="tambah_penyebab(`Penyebab`)" class="btn btn-xs btn-danger"><i class="fas fa-pencil-alt"></i> Isi Penyebab</a>
+                                    @else
+                                        @if($data->status_revisi==0 )
+                                            <a href="javascript:;" onclick="tambah_penyebab(`Penyebab`)" class="btn btn-xs btn-danger"><i class="fas fa-pencil-alt"></i> Isi Penyebab</a>
+                                        @endif
                                     @endif
                                     </div>
                                 </div>
@@ -176,6 +180,10 @@
                                     <div class="panel-heading-btn">
                                     @if($data->status==3)
                                         <a href="javascript:;" class="btn btn-xs btn-danger" onclick="tambah_perbaikan(`Perbaikan`)"><i class="fas fa-pencil-alt"></i> Isi Perbaikan</a>
+                                    @else
+                                        @if($data->status_revisi==0 )
+                                        <a href="javascript:;" class="btn btn-xs btn-danger" onclick="tambah_perbaikan(`Perbaikan`)"><i class="fas fa-pencil-alt"></i> Isi Perbaikan</a>
+                                        @endif
                                     @endif
                                     </div>
                                 </div>
@@ -191,7 +199,7 @@
                         <div class="col-md-4" style="margin-bottom:0%;padding:1%">
                             <div class="panel panel-inverse">
                                 <div class="panel-heading ui-sortable-handle">
-                                    <h4 class="panel-title">Penyebab</h4>
+                                    <h4 class="panel-title">Hasil Review</h4>
                                     <div class="panel-heading-btn">
                                         <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
                                     </div>
@@ -199,45 +207,124 @@
                                 <div class="panel-body p-t-10" style="border: solid 1px #8c8c9f;">
                                     <div class="row row-space-10">
                                         <div class="col-md-12">
-                                            <textarea class="form-control" rows="7">{{$data->tanggapan}}</textarea>
+                                            <textarea class="form-control" disabled rows="7">{{$data->review}}</textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                    </div>
-                @endif
-                <div class="row">
-                    <div class="col-md-12" style="margin-top:3%;margin-bottom:0%;background: #e2e2fd; text-align: center;padding:1%">
-                        @if($data->status==2)
-                        <div class="btn-group" >
-                            <span class="btn btn-sm btn-primary" onclick="verifikasi_publish()">Verifikasi Temuan</span>
-                            
-                        </div>
-                        
+                        @if($data->status_revisi==0 || $data->status_revisi==1)
+
+                        @else
+                            <div class="col-md-12">
+                                <table class="table table-invoice">
+                                    <thead>
+                                        <tr>
+                                            <th>TINDAK LANJUT</th>
+                                        </tr>
+                                    </thead>
+                                    
+                                </table>
+                                <div class="col-md-12 form-horizontal form-bordered" style="margin-bottom:2%">
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b>Input Penyebab</b></label>
+                                        <div class="col-lg-3">
+                                            <b>: {{$data->tanggal_penyebab}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b>Tanggal Audit</b></label>
+                                        <div class="col-lg-5">
+                                            <b>: {{$data->tanggal}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b>File Evidence</b></label>
+                                        <div class="col-lg-10">
+                                            @if($data->status_revisi==2)
+                                                <span onclick="tambah_file()" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Upload Evidence</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label"><b></b></label>
+                                        <div class="col-lg-10">
+                                            @if($data->status_progres==3)
+                                                <i><b style="color:red">Revisi evidence</b></i>
+                                            @endif
+                                            <div id="tampil-file-evidence" ></div>
+                                        </div>
+                                    </div>
+                                    @if($data->status==6)
+                                        <div class="form-group row">
+                                            <label class="col-lg-2 col-form-label"><b>Tanggal Close</b></label>
+                                            <div class="col-lg-5">
+                                                <b>: {{$data->tanggal_close}}</b>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                               
+                                
+                                                  
+                            </div>
                         @endif
-                        @if($data->status==3)
-                        <div class="btn-group" >
-                            @if($data->penyebab!="" && $data->perbaikan!="")
-                            <span class="btn btn-sm btn-primary" onclick="verifikasi_onprogres()">Kirim keauditor</span>
-                            @else
-                            <i><b>Isi penyebab dan perbaikan</b></i>
+                    </div>
+                    
+                @endif
+                @if($data->status!=6)
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top:3%;margin-bottom:0%;background: #e2e2fd; text-align: center;padding:1%">
+                            @if($data->status==2)
+                            <div class="btn-group" >
+                                <span class="btn btn-sm btn-primary" onclick="verifikasi_publish()">Verifikasi Temuan</span>
+                                
+                            </div>
+                            
+                            @endif
+                            @if($data->status==3)
+                            <div class="btn-group" >
+                                @if($data->penyebab!="" && $data->perbaikan!="")
+                                <span class="btn btn-sm btn-primary" onclick="verifikasi_onprogres()">Kirim keauditor</span>
+                                @else
+                                <i><b>Isi penyebab dan perbaikan</b></i>
+                                @endif
+                            </div>
+                            @endif
+                            @if($data->status==4)
+                                <i><b>Alasan</b></i><br>
+                            "{{$data->alasan_penolakan}}" 
+                            @endif
+                            
+                            @if($data->status==5)
+                                @if($data->status_revisi==0)
+                                    <div class="btn-group" >
+                                        @if($data->penyebab!="" && $data->perbaikan!="")
+                                        <span class="btn btn-sm btn-primary" onclick="verifikasi_onprogres()">Kirim hasil perbaikan keauditor </span>
+                                        @else
+                                        <i><b>Isi penyebab dan perbaikan</b></i>
+                                        @endif
+                                    </div>
+                                @endif
+                                @if($data->status_revisi==1)
+                                    <i><b>Proses review auditor</b></i>
+                                @endif
+                                @if($data->status_revisi==2)
+                                <span class="btn btn-sm btn-primary" onclick="kirim_evidence({{$data->nomor_temuan}})">Kirim Evidence </span>
+                                @endif
+                                @if($data->status_revisi==3)
+                                    @if($data->status_progres==3)
+                                        <i><b>Revisi evidence</b></i>
+                                    @endif
+                                    @if($data->status_progres==0)
+                                    <i><b>Auditor Review evidence</b></i>
+                                    @endif
+                                @endif
                             @endif
                         </div>
-                        @endif
-                        @if($data->status==4)
-                            <i><b>Alasan</b></i><br>
-                        "{{$data->alasan_penolakan}}" 
-                        @endif
-                        
-                        @if($data->status==5)
-                            <i><b>Proses review auditor</b></i>
-                        @endif
                     </div>
-                </div>
                
-                
+                @endif
                 
             </div>
         </div>
@@ -245,7 +332,23 @@
         <!-- end invoice-footer -->
     </div>
     <div class="row">
-        
+        <div class="modal fade" id="modal-isian" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="labelnyaa"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="-evidence"></div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Tutup</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="modal-penyebab" aria-hidden="true" style="display: none;">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -372,6 +475,67 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="modal-evidence" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Verifikasi</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="note note-warning note-with-right-icon m-b-15">
+                            <div class="note-content text-right">
+                                <h4><b>Verifikasi!</b></h4>
+                                <p>
+                                    Nomor Temuan #{{$data->nomor_temuan}} selesai dilakukan pengisian penyebab, yakin akan dikirim keauditor?
+                                </p>
+                            </div>
+                            <div class="note-icon"><i class="fa fa-lightbulb"></i></div>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Tutup</a>
+                        <a href="javascript:;" class="btn btn-blue" onclick="onprogres({{$data->nomor_temuan}})" >Verifikasi</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal-file" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload file Evidence</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="notifikasierrorfile"></div>
+                        <form class="form-horizontal form-bordered" id="mydatafile" action="{{url('/Temuan/simpan_file_evidence')}}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="nomor_temuan" value="{{$data->nomor_temuan}}">
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">File</label>
+                                <div class="col-lg-4">
+                                    <input type="file" id="filenya" name="file" placeholder="Ketik disini....." class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-2 col-form-label">Keterangan </label>
+                                <div class="col-lg-9">
+                                    <input type="text" name="name" id="namanya" placeholder="Ketik disini....." class="form-control">
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Tutup</a>
+                        <a href="javascript:;" class="btn btn-success" onclick="simpan_file()">Simpan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
@@ -387,9 +551,13 @@
 			autoclose :true,
 		});
 
+        $('#tampil-file-evidence').load("{{url('Temuan/tampil_file_evidence')}}?nomor_temuan={{$data->nomor_temuan}}");
         $('#setujui').show();
         $('#tolak').hide();
 
+        function tambah_file(){
+            $('#modal-file').modal('show');
+        }
         function tambah_penyebab(name){
             $('#labelnyaa').html(name);
             $('#modal-penyebab').modal('show');
@@ -439,6 +607,20 @@
             });
             
         }
+        function kirim_evidence(nomor_temuan){
+            $.ajax({
+                url: "{{url('Temuan/kirim_evidence')}}",
+                type: 'GET',
+                data: "nomor_temuan="+nomor_temuan,
+                beforeSend: function() {
+                    document.getElementById("loadnya").style.width = "100%";
+                },
+                success: function(msg){
+                    location.assign("{{url('Temuan')}}");
+                }
+            });
+            
+        }
 		function verifikasi_publish(){
             $('#modal-publish').modal('show');
         }
@@ -446,15 +628,15 @@
             $('#modal-onprogres').modal('show');
         }
 		function lihat_file(file){
-            $('#modal-file').modal('show');
+            $('#modal-isian').modal('show');
 
-            $('#tampil-file').html('<embed src="{{url_plug()}}/file/'+file+'" width="100%" height="480"  type="application/pdf">');
+            $('#-evidence').html('<embed src="{{url_plug()}}/file/'+file+'" width="100%" height="480"  type="application/pdf">');
                   
         }
 		
 		function hapus_file(id){
             $.ajax({
-                url: "{{url('Temuan/hapus_file')}}",
+                url: "{{url('Temuan/hapus_file_evidence')}}",
                 type: 'GET',
                 data: "id="+id,
                 beforeSend: function() {
@@ -462,7 +644,7 @@
                 },
                 success: function(msg){
                     document.getElementById("loadnya").style.width = "0px";
-                    $('#tampil-file').load("{{url('Temuan/file')}}?nomor_temuan={{$data->nomor_temuan}}");
+                    $('#tampil-file-evidence').load("{{url('Temuan/tampil_file_evidence')}}?nomor_temuan={{$data->nomor_temuan}}"); 
                 }
             });
             
@@ -554,7 +736,7 @@
             
                 $.ajax({
                     type: 'POST',
-                    url: "{{url('/Temuan/simpan_file')}}",
+                    url: "{{url('/Temuan/simpan_file_evidence')}}",
                     data: new FormData(form),
                     contentType: false,
                     cache: false,
@@ -566,10 +748,14 @@
                         var bat=msg.split('@');
                         if(bat[1]=='ok'){
                             document.getElementById("loadnya").style.width = "0px";
+                            $('#filenya').val('');   
+                            $('#namanya').val('');   
+                            $('#notifikasierrorfile').hide();
                             $('#modal-file').modal('hide');   
-                            $('#tampil-file').load("{{url('Temuan/file')}}?nomor_temuan={{$data->nomor_temuan}}");  
+                            $('#tampil-file-evidence').load("{{url('Temuan/tampil_file_evidence')}}?nomor_temuan={{$data->nomor_temuan}}"); 
                         }else{
                             document.getElementById("loadnya").style.width = "0px";
+                            $('#notifikasierrorfile').show();
 							$('#notifikasierrorfile').html(msg);
                         }
                         

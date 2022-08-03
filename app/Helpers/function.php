@@ -192,8 +192,12 @@ function get_sistem(){
     $data=App\Sistem::where('aktif',1)->get();
     return $data;
 }
+function cek_auditor($nomor,$username){
+    $data=App\Auditauditor::where('nomor',$nomor)->where('username',$username)->count();
+    return $data;
+}
 function get_auditor(){
-    $data=App\Akses::select('username')->where('role_id',2)->groupBy('username')->get();
+    $data=App\User::where('auditor',1)->get();
     return $data;
 }
 function get_audit_temuan(){
@@ -212,6 +216,15 @@ function get_status(){
     $data=App\Status::whereIn('id',array(3,5,7,6))->get();
     return $data;
 }
+function get_status_act($id){
+    if($id==1){
+        $data=App\Status::whereIn('id',array(1,2,3))->get();
+    }else{
+        $data=App\Status::whereIn('id',array(4,5,6,7))->get();
+    }
+    
+    return $data;
+}
 function get_status_all(){
     $data=App\Status::whereIn('id',array(1,2,3,4,5,7,6))->get();
     return $data;
@@ -226,6 +239,8 @@ function status($id){
     return $data['name'];
 }
 function cek_status($sts,$nomor){
+    $temuan=App\Temuan::where('nomor_temuan',$nomor)->where('status_revisi',1)->count();
+    $cekeviden=App\Temuan::where('nomor_temuan',$nomor)->where('status_revisi',3)->count();
     $mst=App\Status::where('id',$sts)->first();
     if($sts==0){
         $data='';
@@ -244,6 +259,13 @@ function cek_status($sts,$nomor){
     }
     if($sts==5){
         $data='<span  onclick="location.assign(`'.url('Temuan/detail/').'?temuan='.$nomor.'`)" class="btn btn-xs btn-'.$mst->color.' text-white">'.status(5).'</span>';
+        if($temuan>0){
+            $data.='<span   class="btn btn-xs btn-yellow text-black">Verifikasi</span>';
+        }
+        if($cekeviden>0){
+            $data.='<span   class="btn btn-xs btn-yellow text-black">CekEvidence</span>';
+        }
+        
     }
     if($sts==6){
         $data='<span  onclick="location.assign(`'.url('Temuan/detail/').'?temuan='.$nomor.'`)" class="btn btn-xs btn-'.$mst->color.' text-white">'.status(6).'</span>';
@@ -254,6 +276,10 @@ function cek_status($sts,$nomor){
     return $data;
 }
 function cek_status_auditee($sts,$nomor){
+    $temuan=App\Temuan::where('nomor_temuan',$nomor)->where('status_revisi',0)->count();
+    $eviden=App\Temuan::where('nomor_temuan',$nomor)->where('status_revisi',2)->count();
+    $evidenrevisi=App\Temuan::where('nomor_temuan',$nomor)->where('status_progres',3)->count();
+    
     $mst=App\Status::where('id',$sts)->first();
     if($sts==0){
         $data='';
@@ -272,6 +298,20 @@ function cek_status_auditee($sts,$nomor){
     }
     if($sts==5){
         $data='<span  onclick="location.assign(`'.url('Temuan/detail/').'?temuan='.$nomor.'`)" class="btn btn-xs btn-'.$mst->color.' text-white">'.status(5).'</span>';
+        if($temuan>0){
+            $data.='<span   class="btn btn-xs btn-yellow text-black">Revisi</span>';
+        }
+        if($eviden>0){
+            if($evidenrevisi>0){
+                $data.='<span   class="btn btn-xs btn-yellow text-black">RevisiEvidence</span>';
+            }else{
+                $data.='<span   class="btn btn-xs btn-yellow text-black">Evidence</span>';
+            }
+            
+        }
+       
+            
+        
     }
     if($sts==6){
         $data='<span  onclick="location.assign(`'.url('Temuan/detail/').'?temuan='.$nomor.'`)" class="btn btn-xs btn-'.$mst->color.' text-white">'.status(6).'</span>';
@@ -330,6 +370,34 @@ function total_temuan($kode,$tahun,$act){
     }
     if($act==7){
         $data=App\Temuan::where('kode',$kode)->whereYear('create',$tahun)->where('status',7)->count();
+    }
+    
+    return $data;
+}
+function jumlah_total_temuan($act){
+    if($act==0){
+        if(Auth::user()->role_id==2){
+            $data=App\Temuan::whereYear('create',tahun())->whereIn('nomor',array_auditor())->count();
+        }else{
+            $data=App\Temuan::whereYear('create',tahun())->count();
+        }
+        
+    }
+    elseif($act==7){
+        if(Auth::user()->role_id==2){
+            $data=App\Temuan::whereYear('create',tahun())->where('status','!=',6)->where('tanggal_sampai','<',date('Y-m-d'))->whereIn('nomor',array_auditor())->count();
+        }else{
+            $data=App\Temuan::whereYear('create',tahun())->where('status','!=',6)->where('tanggal_sampai','<',date('Y-m-d'))->count();
+        }
+        
+    }
+    else{
+        if(Auth::user()->role_id==2){
+            $data=App\Temuan::whereYear('create',tahun())->where('status',$act)->whereIn('nomor',array_auditor())->count();
+        }else{
+            $data=App\Temuan::whereYear('create',tahun())->where('status',$act)->count();
+        }
+        
     }
     
     return $data;
@@ -405,6 +473,13 @@ function rekap_total_temuan_sistem($tahun,$sistem_id,$act){
     
     return $data;
 }
+function rekap_total_temuan_sistem_detail($sistem_detail_id){
+    
+    $data=App\Viewsistemdetail::where('sistem_detail_id',$sistem_detail_id)->whereYear('create',tahun())->count();
+   
+    
+    return $data;
+}
 function total_all_temuan_sistem($kode,$tahun,$act){
     if($act==0){
         $data=App\Viewtemuansistem::where('kode',$kode)->whereYear('create',$tahun)->count();
@@ -469,7 +544,7 @@ function get_sistem_audit($nomor){
     return $data;
 }
 function get_view(){
-    $data=App\Viewexcel::get();
+    $data=App\Viewexcel::whereIn('nomor',array_auditor())->whereYear('create',tahun())->get();
     return $data;
 }
 function get_sistem_temuan($nomor){
@@ -499,6 +574,15 @@ function array_auditor(){
      );
     return $data;
 }
+function array_temuan_auditor(){
+    
+    $data  = array_column(
+        App\Temuan::where('nomor',array_auditor())->orderBy('id','Asc')
+        ->get()
+        ->toArray(),'nomor_temuan'
+     );
+    return $data;
+}
 function array_auditee(){
     
     $data  = array_column(
@@ -510,6 +594,10 @@ function array_auditee(){
 }
 function get_klausul($nomor){
     $data=App\Sistemdetail::whereIn('sistem_id',array_sistem($nomor))->orderByRaw('sistem_id','Asc')->get();
+    return $data;
+}
+function get_klausul_all($id){
+    $data=App\Sistemdetail::where('sistem_id',$id)->orderByRaw('sistem_id','Asc')->get();
     return $data;
 }
 function get_audit_sistem($nomor){

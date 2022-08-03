@@ -38,6 +38,11 @@ class HomeController extends Controller
         $tahun=tahun();
         return view('dashboardgrafik',compact('tahun'));
     }
+    public function tampil_dashboard_sistem(request $request)
+    {
+        $tahun=tahun();
+        return view('dashboardsistem',compact('tahun'));
+    }
     public function cari_tahun(request $request)
     {
         $data=User::where('username',Auth::user()->username)->update([

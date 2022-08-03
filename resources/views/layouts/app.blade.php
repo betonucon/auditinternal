@@ -3,7 +3,8 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<title>Krakatau Steel </title>
+	<title>Krakatau Steel</title>
+    <link rel="icon" href="{{url_plug()}}/img/fav.png" type="image/x-icon">
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -89,7 +90,25 @@
 			</div>
 			<!-- end navbar-header --><!-- begin header-nav -->
 			<ul class="navbar-nav navbar-right">
-				
+				<li class="dropdown">
+					<a href="#" data-toggle="dropdown" class="dropdown-toggle f-s-14" aria-expanded="false">
+						<i class="fa fa-bell"></i>
+						<span class="label">5</span>
+					</a>
+					<div class="dropdown-menu media-list dropdown-menu-right" style="">
+						<div class="dropdown-header">NOTIFICATIONS (5)</div>
+						<a href="javascript:;" class="dropdown-item media">
+							<div class="media-body">
+								<h6 class="media-heading">Server Error Reports <i class="fa fa-exclamation-circle text-danger"></i></h6>
+								<div class="text-muted f-s-10">3 minutes ago</div>
+							</div>
+						</a>
+						
+						<div class="dropdown-footer text-center">
+							<a href="javascript:;">View more</a>
+						</div>
+					</div>
+				</li>
 				<li class="dropdown navbar-user">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<img src="{{url_plug()}}/assets/img/akun.png" alt="" /> 
