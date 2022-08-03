@@ -6,9 +6,10 @@
         <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
         <li class="breadcrumb-item active">{{$menu}}</li>
     </ol>
-    <h1 class="page-header">Laporan Rencana Audit dan Temuan<small></small></h1>
+    <h1 class="page-header">Dashboard<small></small></h1>
     <div class="row">
         <div class="col-xl-12">
+            
             <!-- begin panel -->
             <div class="panel panel-inverse" data-sortable-id="form-plugins-1">
                 <!-- begin panel-heading -->
@@ -24,13 +25,36 @@
                 <!-- end panel-heading -->
                 <!-- begin panel-body -->
                 <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="{{url_plug()}}/img/ks.png" width="100%" alt="" /> 
+                        </div>
+                        <div class="col-md-8 form-horizontal form-bordered">
+                            @foreach(get_status() as $s)
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label"><span class="badge bg-{{$s->color}} f-s-11">{{$s->name}}</span></label>
+                                    <div class="col-lg-10" style="padding: 0px !important;">
+                                        {{$s->keterangan}}
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="col-md-2">
+                            <h4 class="widget-chat-header-title">Periode {{tahun()}}</h4>
+                        </div>
+                        <div class="col-md-9">
+                            <hr style="border-top: double 3px #938f8f;">
+                        </div>
+                        <div class="col-md-1">
+                        <a class="btn btn-success btn-sm text-white"  data-click="theme-panel-expand" ><i class="fas fa-filter"></i> Filter</a>
+                        </div>
+                    </div>
                     <form class="form-horizontal form-bordered" id="mydata" action="{{url('Barangmasuk')}}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="row" style="margin-bottom:1%">
                         <div class="col-md-12" style="margin-top:2%">
                             <div class="widget-chat-header">
                                 <div class="widget-chat-header-content">
-                                    <h4 class="widget-chat-header-title"><i class="fas fa-bars"></i> Temuan</h4>
                                     <p class="widget-chat-header-desc"></p>
                                 </div>
                             </div>
@@ -83,8 +107,9 @@
             
         </div>
     </div>
+    
     <div class="row">
-        
+        <div id="tampil_dashboard_sistem"></div>
     </div>
 </div>
 @endsection
@@ -105,5 +130,6 @@
         });
 
         $('#tampil_dashboard_grafik').load("{{url('tampil_grafik')}}");
+        $('#tampil_dashboard_sistem').load("{{url('tampil_dashboard_sistem')}}");
     </script>
 @endpush

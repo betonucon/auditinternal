@@ -2,20 +2,16 @@
         <canvas id="bar-chart" data-render="chart-js"></canvas>
     </div>
     
-    <script src="{{url_plug()}}/assets/js/app.min.js"></script>
-	<script src="{{url_plug()}}/assets/js/theme/default.min.js"></script>
-	<!-- ================== END BASE JS ================== -->
-	
-	<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+    
 	<script src="{{url_plug()}}/assets/plugins/chart.js/dist/Chart.min.js"></script>
     <script src="{{url_plug()}}/assets/js/demo/chart-js.demo.js"></script>
     <script>
         /*
-Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 4
-Version: 4.6.0
-Author: Sean Ngu
-Website: http://www.seantheme.com/color-admin/admin/
-*/
+    Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 4
+    Version: 4.6.0
+    Author: Sean Ngu
+    Website: http://www.seantheme.com/color-admin/admin/
+    */
 
     Chart.defaults.global.defaultFontColor = COLOR_DARK;
     Chart.defaults.global.defaultFontFamily = FONT_FAMILY;

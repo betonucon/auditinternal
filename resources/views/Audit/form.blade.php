@@ -43,7 +43,7 @@
 										<optgroup label="Pilih Unit Kerja">
                                             <option value=""> Pilih unit kerja</option>
                                             @foreach(get_unit() as $unit)
-                                                <option value="{{$unit->kode}}"> - {{$unit->name}}</option>
+                                                <option value="{{$unit->kode}}" @if($data->kode==$unit->kode) selected @endif > - {{$unit->name}}</option>
                                             @endforeach
                                         </optgroup>
                                     </select>
@@ -75,7 +75,7 @@
                                     <select class="default-select2 form-control"  name="periode_id">
                                         <option value=""> Pilih periode</option>
                                         @foreach(get_periode() as $periode)
-                                            <option value="{{$periode->id}}"> - {{$periode->name}}</option>
+                                            <option value="{{$periode->id}}" @if($data->periode_id==$periode->id) selected @endif > - {{$periode->name}}</option>
                                         @endforeach
                                         
                                     </select>
